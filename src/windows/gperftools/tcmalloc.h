@@ -45,7 +45,7 @@
 #define TC_VERSION_MAJOR  2
 #define TC_VERSION_MINOR  8
 #define TC_VERSION_PATCH  ".1"
-#define TC_VERSION_STRING "gperftools 2.8.1"
+#define TC_VERSION_STRING "gperftools 2.8.1-yb-1"
 
 #ifndef PERFTOOLS_NOTHROW
 
