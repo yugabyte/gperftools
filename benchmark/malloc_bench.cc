@@ -30,6 +30,7 @@
 #include <stdint.h>
 
 #include <algorithm>
+#include <random>
 
 #include "run_benchmark.h"
 
@@ -225,7 +226,7 @@ static void bench_fastpath_rnd_dependent(long iterations,
 static void *randomize_buffer[13<<20];
 
 
-void randomize_one_size_class(size_t size) {
+void randomize_one_size_class(size_t size, std::mt19937* random_generator) {
   int count = (100<<20) / size;
   if (count * sizeof(randomize_buffer[0]) > sizeof(randomize_buffer)) {
     abort();
@@ -233,29 +234,33 @@ void randomize_one_size_class(size_t size) {
   for (int i = 0; i < count; i++) {
     randomize_buffer[i] = malloc(size);
   }
-  std::random_shuffle(randomize_buffer, randomize_buffer + count);
+
+  std::shuffle(randomize_buffer, randomize_buffer + count, *random_generator);
   for (int i = 0; i < count; i++) {
     free(randomize_buffer[i]);
   }
 }
 
 void randomize_size_classes() {
-  randomize_one_size_class(8);
+  std::random_device random_device;
+  std::mt19937 random_generator(random_device());
+
+  randomize_one_size_class(8, &random_generator);
   int i;
   for (i = 16; i < 256; i += 16) {
-    randomize_one_size_class(i);
+    randomize_one_size_class(i, &random_generator);
   }
   for (; i < 512; i += 32) {
-    randomize_one_size_class(i);
+    randomize_one_size_class(i, &random_generator);
   }
   for (; i < 1024; i += 64) {
-    randomize_one_size_class(i);
+    randomize_one_size_class(i, &random_generator);
   }
   for (; i < (4 << 10); i += 128) {
-    randomize_one_size_class(i);
+    randomize_one_size_class(i, &random_generator);
   }
   for (; i < (32 << 10); i += 1024) {
-    randomize_one_size_class(i);
+    randomize_one_size_class(i, &random_generator);
   }
 }
 
