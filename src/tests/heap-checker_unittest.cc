@@ -868,12 +868,16 @@ static void* HeapBusyThreadBody(void* a) {
   // Here we are just making a best effort to put the only pointer
   // to a heap object into a thread register to test
   // the thread-register finding machinery in the heap checker.
+  //
+  // Disable the "register" keyword due to the following error with -stdc++20 enabled:
+  // https://gist.githubusercontent.com/mbautin/821b6f2608eee40b89de47a67a06f1d6/raw
+  //
 #if defined(__i386__) && defined(__GNUC__)
-  register int** ptr asm("esi");
+  /* register */ int** ptr asm("esi");
 #elif defined(__x86_64__) && defined(__GNUC__)
-  register int** ptr asm("r15");
+  /* register */ int** ptr asm("r15");
 #else
-  register int** ptr;
+  /* register */ int** ptr;
 #endif
   ptr = NULL;
   typedef set<int> Set;
