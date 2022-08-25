@@ -520,7 +520,10 @@ void ThreadCache::GetThreadStats(uint64_t* total_bytes, uint64_t* class_count) {
 void ThreadCache::set_overall_thread_cache_size(size_t new_size) {
   // Clip the value to a reasonable range
   if (new_size < kMinThreadCacheSize) new_size = kMinThreadCacheSize;
-  if (new_size > (1<<30)) new_size = (1<<30);     // Limit to 1GB
+  // Modified by Yugabyte: not limiting thread cache size to 1GB.
+  if (false) {
+    if (new_size > (1<<30)) new_size = (1<<30);     // Limit to 1GB
+  }
   overall_thread_cache_size_ = new_size;
 
   RecomputePerThreadCacheSize();
