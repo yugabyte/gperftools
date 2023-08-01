@@ -41,24 +41,10 @@
 
 using std::min;
 
-// The approximate gap in bytes between sampling actions.
-// I.e., we take one sample approximately once every
-// tcmalloc_sample_parameter bytes of allocation
-// i.e. about once every 512KB if value is 1<<19.
-#ifdef NO_TCMALLOC_SAMPLES
-DEFINE_int64(tcmalloc_sample_parameter, 0,
-             "Unused: code is compiled with NO_TCMALLOC_SAMPLES");
-#else
-DEFINE_int64(tcmalloc_sample_parameter,
-             EnvToInt64("TCMALLOC_SAMPLE_PARAMETER", 0),
-             "The approximate gap in bytes between sampling actions. "
-             "This must be between 1 and 2^58.");
-#endif
-
 namespace tcmalloc {
 
 int Sampler::GetSamplePeriod() {
-  return FLAGS_tcmalloc_sample_parameter;
+  return Static::get_sample_period();
 }
 
 // Run this before using your sampler
@@ -89,7 +75,8 @@ void Sampler::Init(uint64_t seed) {
 // log_2(q) * (-log_e(2) * 1/m) = x
 // In the code, q is actually in the range 1 to 2**26, hence the -26 below
 ssize_t Sampler::PickNextSamplingPoint() {
-  if (FLAGS_tcmalloc_sample_parameter <= 0) {
+  int64_t sample_period = Static::get_sample_period();
+  if (sample_period <= 0) {
     // In this case, we don't want to sample ever, and the larger a
     // value we put here, the longer until we hit the slow path
     // again. However, we have to support the flag changing at
@@ -109,7 +96,7 @@ ssize_t Sampler::PickNextSamplingPoint() {
   double q = static_cast<uint32_t>(rnd_ >> (prng_mod_power - 26)) + 1.0;
   // Put the computed p-value through the CDF of a geometric.
   double interval =
-      (log2(q) - 26) * (-log(2.0) * FLAGS_tcmalloc_sample_parameter);
+      (log2(q) - 26) * (-log(2.0) * sample_period);
 
   // Very large values of interval overflow ssize_t. If we happen to
   // hit such improbable condition, we simply cheat and clamp interval
@@ -128,7 +115,7 @@ bool Sampler::RecordAllocationSlow(size_t k) {
     }
   }
   bytes_until_sample_ = PickNextSamplingPoint();
-  return FLAGS_tcmalloc_sample_parameter <= 0;
+  return Static::get_sample_period() <= 0;
 }
 
 }  // namespace tcmalloc

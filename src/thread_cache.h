@@ -58,8 +58,6 @@
 #include "sampler.h"           // for Sampler
 #include "static_vars.h"       // for Static
 
-DECLARE_int64(tcmalloc_sample_parameter);
-
 namespace tcmalloc {
 
 //-------------------------------------------------------------------

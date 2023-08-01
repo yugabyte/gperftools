@@ -651,7 +651,7 @@ class TCMallocImplementation : public MallocExtension {
 
   // We may print an extra, tcmalloc-specific warning message here.
   virtual void GetHeapSample(MallocExtensionWriter* writer) {
-    if (FLAGS_tcmalloc_sample_parameter == 0) {
+    if (Static::get_sample_period() == 0) {
       const char* const kWarningMsg =
           "%warn\n"
           "%warn This heap profile does not have any data in it, because\n"
@@ -867,6 +867,16 @@ class TCMallocImplementation : public MallocExtension {
     }
 
     return false;
+  }
+
+  virtual int64_t GetProfileSamplingRate() {
+    return Static::get_sample_period();
+  }
+
+  // Sets the sampling rate for heap profiles.  TCMalloc samples approximately
+  // every sample_period bytes allocated.
+  virtual void SetProfileSamplingRate(int64_t sample_period) {
+    Static::set_sample_period(sample_period);
   }
 
   virtual void MarkThreadIdle() {
