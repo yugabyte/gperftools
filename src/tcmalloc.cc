@@ -860,7 +860,7 @@ class TCMallocImplementation : public MallocExtension {
     return Static::get_sample_period();
   }
 
-  // Sets the sampling rate for heap profiles.  TCMalloc samples approximately
+  // Sets the sampling rate for heap profiles. TCMalloc samples approximately
   // every sample_period bytes allocated.
   virtual void SetProfileSamplingRate(int64_t sample_period) {
     Static::set_sample_period(sample_period);
