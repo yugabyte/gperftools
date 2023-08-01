@@ -76,6 +76,7 @@ PageHeapAllocator<StackTrace> Static::stacktrace_allocator_;
 Span Static::sampled_objects_;
 StackTrace* Static::growth_stacks_ = NULL;
 Static::PageHeapStorage Static::pageheap_;
+std::atomic<int64_t> Static::sample_period_;
 
 void Static::InitStaticVars() {
   sizemap_.Init();
@@ -104,6 +105,8 @@ void Static::InitStaticVars() {
                          kDefaultAggressiveDecommit);
 
   pageheap()->SetAggressiveDecommit(aggressive_decommit);
+
+  sample_period_ = 0;
 
   inited_ = true;
 

@@ -622,10 +622,9 @@ TEST(Sample, size_of_class) {
 }
 
 // Make sure sampling is enabled, or the tests won't work right.
-DECLARE_int64(tcmalloc_sample_parameter);
 
 int main(int argc, char **argv) {
-  if (FLAGS_tcmalloc_sample_parameter == 0)
-    FLAGS_tcmalloc_sample_parameter = 524288;
+  if (MallocExtension::instance()->GetProfileSamplingRate() == 0)
+    MallocExtension::instance()->SetProfileSamplingRate(524288);
   return RUN_ALL_TESTS();
 }
