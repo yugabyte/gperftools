@@ -87,11 +87,9 @@ class Static {
   static Span* sampled_objects() { return &sampled_objects_; }
 
   static int64_t get_sample_period() {
-    // return sample_period_;
     return sample_period_.load(std::memory_order_relaxed);
   }
   static void set_sample_period(int64_t rate) {
-    // sample_period_ = store(rate, std::memory_order_relaxed);
     sample_period_.store(rate, std::memory_order_relaxed);
   }
 
