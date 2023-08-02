@@ -90,7 +90,8 @@ class Static {
     return sample_period_.load(std::memory_order_relaxed);
   }
   static void set_sample_period(int64_t rate) {
-    sample_period_.store(rate, std::memory_order_relaxed);
+    // This is not on any performance-intensive paths, so sequential consistency is fine.
+    sample_period_.store(rate, std::memory_order_seq_cst);
   }
 
   // Check if InitStaticVars() has been run.
