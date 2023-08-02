@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.12)
 
 # Based on configure.ac
 
-project(gperftools VERSION 2.8.1-yb-4 LANGUAGES C CXX
+project(gperftools VERSION 2.8.1-yb-5 LANGUAGES C CXX
         DESCRIPTION "Performance tools for C++"
         HOMEPAGE_URL http://code.google.com/p/gperftools/)
 

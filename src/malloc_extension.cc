@@ -122,6 +122,16 @@ bool MallocExtension::SetNumericProperty(const char* property, size_t value) {
   return false;
 }
 
+int64_t MallocExtension::GetProfileSamplingRate() {
+  return 0;
+}
+
+// Sets the sampling rate for heap profiles. TCMalloc samples approximately
+// every sample_period bytes allocated.
+void MallocExtension::SetProfileSamplingRate(int64_t sample_period) {
+  return;
+}
+
 void MallocExtension::GetStats(char* buffer, int length) {
   assert(length > 0);
   buffer[0] = '\0';

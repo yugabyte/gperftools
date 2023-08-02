@@ -654,8 +654,8 @@ static void TestRealloc() {
   // makes reallocs of small sizes do extra work (thus, failing these
   // checks).  Since sampling is random, we turn off sampling to make
   // sure that doesn't happen to us here.
-  const int64 old_sample_parameter = FLAGS_tcmalloc_sample_parameter;
-  FLAGS_tcmalloc_sample_parameter = 0;   // turn off sampling
+  const int64 old_sample_parameter = MallocExtension::instance()->GetProfileSamplingRate();
+  MallocExtension::instance()->SetProfileSamplingRate(0);   // turn off sampling
 
   int start_sizes[] = { 100, 1000, 10000, 100000 };
   int deltas[] = { 1, -2, 4, -8, 16, -32, 64, -128 };
@@ -675,7 +675,7 @@ static void TestRealloc() {
     }
     free(p);
   }
-  FLAGS_tcmalloc_sample_parameter = old_sample_parameter;
+  MallocExtension::instance()->SetProfileSamplingRate(old_sample_parameter);
 #endif
 }
 

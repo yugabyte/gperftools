@@ -237,6 +237,12 @@ class PERFTOOLS_DLL_DECL MallocExtension {
   // REQUIRES: property != NULL
   virtual bool SetNumericProperty(const char* property, size_t value);
 
+  virtual int64_t GetProfileSamplingRate();
+
+  // Sets the sampling rate for heap profiles. TCMalloc samples approximately
+  // every sample_period bytes allocated.
+  virtual void SetProfileSamplingRate(int64_t sample_period);
+
   // Mark the current thread as "idle".  This routine may optionally
   // be called by threads as a hint to the malloc implementation that
   // any thread-specific resources should be released.  Note: this may
