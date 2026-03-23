@@ -40,6 +40,8 @@
 #include "page_heap_allocator.h"  // for PageHeapAllocator
 #include "static_vars.h"       // for Static
 
+#include <new>
+
 namespace tcmalloc {
 
 StackTraceTable::StackTraceTable()
